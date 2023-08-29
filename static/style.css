@@ -30,3 +30,15 @@ body {
 .tag-container {
     margin-bottom: 0;
 }
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+}

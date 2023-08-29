@@ -1,10 +1,12 @@
+from django.conf import settings
 from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
 
 
 class Author(models.Model):
-    name = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    name = models.IntegerField(default=2)
     biography = models.CharField(max_length=255)
 
     def __str__(self):
