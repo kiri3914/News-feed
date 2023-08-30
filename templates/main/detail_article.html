@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %} Detail article {% endblock title %}  
+
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>{{ article.title }}</h1>
+                <p class="text-muted">by {{ article.author }} | {{ article.published_date }}</p>
+                {% if article.image_url %}
+                    <img src="{{ article.image_url.url }}" alt="{{ article.title }}" class="card-img-top">
+                {% endif %}
+                <p>{{ article.summary }}</p>
+                <hr>
+                <div>{{ article.content | safe }}</div>
+                <hr>
+                <p class="tag-container">
+                    <strong>Tags:</strong>
+                    {% for tag in article.tags.all %}
+                        <a href="{% url 'get_article_by_tag' tag.id %}">
+                            <span class="badge bg-primary-gradient">#{{ tag.tag_name }}</span>
+                        </a>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}  
