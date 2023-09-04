@@ -39,11 +39,11 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
-    def publish(self):
-        self.save()
+    class Meta:
+        ordering = ['-published_date']
 
-    def get_absolute_url(self):
-        return reverse("article_detail", kwargs={"pk": self.pk})
+    # def get_absolute_url(self):
+    #     return reverse("article_detail", kwargs={"pk": self.pk})
 
 
 class Comments(models.Model):
