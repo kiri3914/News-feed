@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} Detail article {% endblock title %}  
+
+
+
+{% block content %}
+
+<div class="container mt-4">
+    <h4>Edit Article</h4>
+    
+    <form action="{% url 'edit_article' article.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-success" type="submit" value="Редактировать">
+        <a href="{% url 'detail_article' article.id  %}">
+            <input class="btn btn-danger" type="submit" value="Отменить">
+        </a>
+    </form>
+</div>
+
+{% endblock content %}

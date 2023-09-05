@@ -15,18 +15,47 @@
 <body>
     <header class="p-3 mb-3 border-bottom bg-light">
         <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <nav class="navbar navbar-expand-lg navbar-light">
                 <a class="navbar-brand" href="/">Newspaper</a>
-                <!-- You can add a navigation menu here if needed -->
-                <div class="navbar-nav">
-                    <a class="nav-link" href="{% url 'add_article' %}">Add Article</a>
-                </div>
-                <div class="navbar-nav">
-                    <a class="nav-link" href="{% url 'add_category' %}">Add Category</a>
-                </div>
-  
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto d-flex align-items-center">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'add_article' %}">Add article</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'add_category' %}">Add category</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="https://cdn-icons-png.flaticon.com/512/666/666201.png" alt="User Icon" width="32" height="32">
+                {{ user.username }}
+            </a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                <a class="dropdown-item" href="{% url 'profile' user.pk %}">Profile</a>
             </div>
-        </div>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Register</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+<!-- ... -->
+
+<!-- ... -->
+
     </header>
 
     <main class="container mt-5">
