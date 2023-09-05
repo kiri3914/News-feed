@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.views.generic import UpdateView, DeleteView
+
 from .models import Article, Category
-from django.http import Http404
-from .forms import ArticleForm, CategoryForm
+from .forms import ArticleForm, CategoryForm, CommentsForm
+import pickle as pk
 
 
 def index(request):
@@ -35,10 +37,17 @@ def get_article_by_tag(request, tag_id):
     return render(request, 'main/index.html', context)
 
 
-def detail_article(request, article_id):
-    article = get_object_or_404(Article, id=article_id)
+def detail_article(request, pk):
+    article = get_object_or_404(Article, id=pk)
+    article.views += 1
+    article.save()
+
+    form = CommentsForm()
+    user_has_liked = article.likes.filter(user=request.user.author).exists()
     context = {
-        'article': article
+        'article': article,
+        'form': form,
+        'user_has_liked': user_has_liked
     }
     return render(request, 'main/detail_article.html', context)
 
@@ -69,3 +78,34 @@ def add_category(request):
         'form': form
     }
     return render(request, 'main/add_category.html', context)
+
+
+class EditArticleView(UpdateView):
+    model = Article
+    template_name = 'main/edit_article.html'
+    form_class = ArticleForm
+
+
+def add_comment(request, pk):
+    article = get_object_or_404(Article, id=pk)
+    if request.method == 'POST':
+        form = CommentsForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.article = article
+            comment.user = request.user.author
+            comment.save()
+            return redirect('detail_article', pk=article.id)
+
+
+
+def create_like(request, pk):
+    article = get_object_or_404(Article, id=pk)
+    if request.user.is_authenticated:
+        if request.user.author and article.likes.filter(user=request.user.author).exists():
+            article.likes.filter(user=request.user.author).delete()
+        else:
+            article.likes.create(user=request.user.author)
+        return redirect('detail_article', pk=article.id)
+    else:
+        return redirect('login')
